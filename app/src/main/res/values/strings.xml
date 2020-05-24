@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Decida a História</string>
+
+    <!--  Genres   -->
+    <string name="genre_action">Ação</string>
+    <string name="genre_adventure">Aventura</string>
+    <string name="genre_comedy">Comédia</string>
+    <string name="genre_drama">Drama</string>
+    <string name="genre_fantasy">Fantasia</string>
+    <string name="genre_horror">Terror</string>
+    <string name="genre_isekai">Isekai</string>
+    <string name="genre_mistery">Mistério</string>
+    <string name="genre_romance">Romance</string>
+    <string name="genre_science_fiction">Ficção Científica</string>
+    <string name="genre_other">Outro</string>
+
+    <!--  Messages   -->
+    <string name="fetching_data_from_server">buscando dados...</string>
+
+    <!--  Layout Text   -->
+    <string name="play">JOGAR</string>
+    <string name="create">CRIAR</string>
+    <string name="description">DESCRIÇÃO</string>
+
 </resources>
