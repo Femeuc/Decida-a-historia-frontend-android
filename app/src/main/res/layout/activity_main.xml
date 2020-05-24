@@ -8,7 +8,6 @@
     android:paddingLeft="60dp"
     android:paddingRight="60dp"
     tools:context=".MainActivity">
-    <!-- android:background="@drawable/decida_a_historia_menu"-->
 
     <Button
         android:id="@+id/login_button"
