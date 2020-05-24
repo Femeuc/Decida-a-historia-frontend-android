@@ -2,7 +2,10 @@ package com.femeuc.decidaahistria;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.Cache;
@@ -23,46 +26,46 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button loginButton, playButton, signupButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        final TextView testTextview = findViewById(R.id.testTextView);
-
-        RequestQueue requestQueue;
-
-        // Instantiate the cache
-                Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-
-        // Set up the network to use HttpURLConnection as the HTTP client.
-                Network network = new BasicNetwork(new HurlStack());
-
-        // Instantiate the RequestQueue with the cache and network.
-                requestQueue = new RequestQueue(cache, network);
-
-        // Start the queue
-                requestQueue.start();
-
-        String url = "https://decida-a-historia.herokuapp.com/users/1";
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-//                        testTextview.setText(response.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-//                        testTextview.setText("Error: " + error.toString());
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-                MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        findViewsById();
+        setOnClickListeners();
     }
+
+    private void findViewsById() {
+        loginButton = findViewById(R.id.login_button);
+        playButton = findViewById(R.id.play_button);
+        signupButton = findViewById(R.id.signup_button);
+    }
+
+    private void setOnClickListeners() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, StoryDetailsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, StoriesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
 }
