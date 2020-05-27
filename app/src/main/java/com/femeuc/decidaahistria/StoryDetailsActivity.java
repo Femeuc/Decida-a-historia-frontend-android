@@ -15,18 +15,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class StoryDetailsActivity extends AppCompatActivity {
     int storyId;
     boolean isCreated;
-    Story story;
-    boolean isStoryCreated;
+    JSONObject jsonObject;
     
-    TextView storyNameTextView, storyGenreTextView;
-    EditText storyDescriptionEditText;
+    TextView storyGenreTextView;
+    EditText storyNameEditText, storyDescriptionEditText;
     Button playCreateButton;
 
     @Override
@@ -41,18 +39,26 @@ public class StoryDetailsActivity extends AppCompatActivity {
         findViewsById();
         setOnClickListeners();
 
-        storyDescriptionEditText.setEnabled(false);
-        storyDescriptionEditText.setBackground(null);
-        storyDescriptionEditText.setFocusableInTouchMode(false);
+        if(!isCreated) setStoryNotCreatedYet();
+        else setStoryAlreadyCreated();
 
-        if(!isCreated) { setStoryNotCreatedYet(); return;}
+    }
+
+    private void setStoryAlreadyCreated() {
+        storyDescriptionEditText.setEnabled(false);
+        storyDescriptionEditText.setFocusableInTouchMode(false);
+        storyDescriptionEditText.setBackground(null);
+
+        storyNameEditText.setEnabled(false);
+        storyNameEditText.setFocusableInTouchMode(false);
+        storyNameEditText.setBackground(null);
+
         fetchStoryDetails();
     }
 
     private void setStoryNotCreatedYet() {
-//        storyGenreTextView.setText(StoryGenre.getById(storyId).toString().toUpperCase());
+        storyGenreTextView.setText(StoryGenre.getById(storyId).toString().toUpperCase());
         playCreateButton.setText(R.string.create);
-        storyDescriptionEditText.setEnabled(true);
     }
 
     private void fetchStoryDetails() {
@@ -62,17 +68,11 @@ public class StoryDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject jsonObject = response.getJSONArray("response").getJSONObject(0);
-                            story = new Story();
-                            story.setId(jsonObject.getInt("id"));
-                            story.setGenre(jsonObject.getString("genre"));
-                            story.setTitle(jsonObject.getString("title"));
-                            story.setDescription(jsonObject.getString("description"));
-                            story.setBeginning_page_id(jsonObject.getInt("beginning_page"));
+                            jsonObject = response.getJSONArray("response").getJSONObject(0);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Toast.makeText(StoryDetailsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                        updateLayoutWithFetchedData();
+                        updateLayoutWithServerData();
                     }
                 }, new Response.ErrorListener() {
 
@@ -86,19 +86,20 @@ public class StoryDetailsActivity extends AppCompatActivity {
         MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
     }
 
-    private void updateLayoutWithFetchedData() {
-        storyNameTextView.setText(story.getTitle());
-        storyGenreTextView.setText(story.getGenre().toUpperCase());
-        storyDescriptionEditText.setText(story.getDescription());
-        storyDescriptionEditText.setFocusableInTouchMode(true);
-        isStoryCreated = true;
-
+    private void updateLayoutWithServerData() {
+        try {
+            storyNameEditText.setText(jsonObject.getString("title"));
+            storyGenreTextView.setText(StoryGenre.getById(jsonObject.getInt("genre") - 1).toString().toUpperCase());
+            storyDescriptionEditText.setText(jsonObject.getString("description"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void findViewsById() {
-        storyNameTextView = findViewById(R.id.story_name_text_view);
+        storyNameEditText = findViewById(R.id.story_name_edit_text);
         storyGenreTextView = findViewById(R.id.story_genre_text_view);
-        storyDescriptionEditText = findViewById(R.id.story_description_text_view);
+        storyDescriptionEditText = findViewById(R.id.story_description_edit_text);
         playCreateButton = findViewById(R.id.playCreate_button);
     }
 
@@ -106,14 +107,72 @@ public class StoryDetailsActivity extends AppCompatActivity {
         playCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isStoryCreated) {
-                    //something
+                if(isCreated) {
+                    //
                 } else {
-                    // something
-                    Toast.makeText(StoryDetailsActivity.this, "História criada com sucesso!", Toast.LENGTH_LONG).show();
-                    finish();
+                    createStoryAndSendToServer();
+                    disableInteractiveViews();
                 }
             }
         });
     }
+
+    private void disableInteractiveViews() {
+        storyDescriptionEditText.setEnabled(false);
+        storyDescriptionEditText.setFocusableInTouchMode(false);
+        storyDescriptionEditText.setBackground(null);
+        storyNameEditText.setEnabled(false);
+        storyNameEditText.setFocusableInTouchMode(false);
+        storyNameEditText.setBackground(null);
+        playCreateButton.setClickable(false);
+    }
+
+    private void createStoryAndSendToServer() {
+        String title = String.valueOf(storyNameEditText.getText());
+        int genre = StoryGenre.getGenreId(String.valueOf(storyGenreTextView.getText())) + 1;
+        String description = String.valueOf(storyDescriptionEditText.getText());
+
+        String url = "https://decida-a-historia.herokuapp.com/story/add";
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("genre", genre);
+            jsonBody.put("title", title);
+            jsonBody.put("description", description);
+        } catch (JSONException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Toast.makeText(StoryDetailsActivity.this, String.valueOf(response.getInt("response")), Toast.LENGTH_SHORT).show();
+                            recreateThisIntent(response.getInt("response"));
+                        } catch (JSONException e) {
+                            Toast.makeText(StoryDetailsActivity.this, "erro aqui", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        //  testTextview.setText("Error: " + error.toString());
+                        Toast.makeText(StoryDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
+    }
+
+    private void recreateThisIntent(int idOfNewStory) {
+        Intent intent = new Intent(getApplicationContext(), StoryDetailsActivity.class);
+        intent.putExtra(StoriesActivity.STORY_ID, idOfNewStory);
+        intent.putExtra(StoriesActivity.IS_STORY_CREATED, true);
+        startActivity(intent);
+        finish();
+    }
+
 }
