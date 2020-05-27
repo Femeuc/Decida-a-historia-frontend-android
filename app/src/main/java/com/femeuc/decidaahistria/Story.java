@@ -2,7 +2,7 @@ package com.femeuc.decidaahistria;
 
 public class Story {
     private int id;
-    private String genre;
+    private int genre;
     private String title;
     private String description;
     private int beginning_page_id;
@@ -15,11 +15,11 @@ public class Story {
         this.id = id;
     }
 
-    public String getGenre() {
+    public int getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(int genre) {
         this.genre = genre;
     }
 
