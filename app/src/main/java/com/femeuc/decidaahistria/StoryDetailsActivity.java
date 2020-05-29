@@ -2,14 +2,10 @@ package com.femeuc.decidaahistria;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -130,18 +126,6 @@ public class StoryDetailsActivity extends AppCompatActivity {
                 } else {
                     createStoryAndSendToServer();
                     disableInteractiveViews();
-                }
-            }
-        });
-        storyDescriptionEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
-//                    storyGenreTextView.setHeight(0);
-
-                } else {
-//                    storyGenreTextView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                    storyGenreTextView.requestLayout();
                 }
             }
         });
