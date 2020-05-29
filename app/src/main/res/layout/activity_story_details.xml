@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StoryDetailsActivity"
-    android:background="@drawable/story_details_background"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
-    android:paddingLeft="70dp"
-    android:paddingRight="70dp"
+    android:background="@color/white_background"
     android:orientation="vertical"
+    android:padding="20dp"
     >
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@drawable/page_background"
+        android:padding="10dp"
         >
         <EditText
             android:id="@+id/story_name_edit_text"
@@ -29,13 +26,7 @@
             android:gravity="center"
             android:padding="10dp"
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="invisible"
-            android:visibility="invisible"
-            />
+
         <TextView
             android:id="@+id/story_genre_text_view"
             android:layout_width="match_parent"
@@ -44,6 +35,7 @@
             android:text="@string/fetching_data_from_server"
             android:textColor="#000"
             android:textSize="25sp"
+            android:padding="20dp"
             />
 
         <TextView
@@ -55,20 +47,11 @@
             android:text="@string/description"
             android:textColor="#fff"
             />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        >
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@color/water_background2"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
@@ -83,21 +66,21 @@
                 android:gravity="center"
                 android:text="@string/fetching_data_from_server"
                 android:textSize="16sp"
+                android:textColor="#000"
                 />
         </ScrollView>
 
+        <Button
+            android:id="@+id/playCreate_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background_primary"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="@string/play"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="20dp"
+            />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/playCreate_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_background_primary"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:text="@string/play"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="20dp"
-        />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

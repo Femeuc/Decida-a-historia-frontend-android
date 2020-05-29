@@ -24,33 +24,35 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:paddingBottom="15dp"
             >
+
             <TextView
-                android:id="@+id/story_text_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/button_background_second"
+                android:text="Esta parte da história ainda não foi criada."
+                android:gravity="center"
+                android:padding="10dp"
+                android:textColor="#000"
+                android:textSize="20sp"
+                />
+            <EditText
+                android:id="@+id/story_text_edit_text"
+                android:inputType="textMultiLine"
                 android:minLines="10"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:gravity="start"
-                android:textSize="25sp"
-                />
-            <Button
-                android:id="@+id/choice_1_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/button_background_second"
-                android:padding="10dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
+                android:hint="Adicione uma história"
+                android:gravity="left|center"
                 android:textSize="20sp"
-                />
-            <Button
-                android:id="@+id/choice_2_button"
+            />
+            <EditText
+                android:id="@+id/choice1_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -58,10 +60,33 @@
                 android:background="@drawable/button_background_second"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
+                android:hint="Escolha 1..."
                 android:gravity="center"
-                android:textSize="20sp"
                 />
-
+            <EditText
+                android:id="@+id/choice2_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/button_background_second"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Escolha 1..."
+                android:gravity="center"
+                />
+            <Button
+                android:id="@+id/create_story_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background_primary"
+                android:text="Criar História"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="20dp"
+                />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
