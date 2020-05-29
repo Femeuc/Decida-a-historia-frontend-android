@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ChoicesActivity"/>
         <activity android:name=".StoryBeginningPage" />
-        <activity android:name=".StoryDetailsActivity" android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity android:name=".StoryDetailsActivity" android:windowSoftInputMode="adjustPan" />
         <activity android:name=".StoriesActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
