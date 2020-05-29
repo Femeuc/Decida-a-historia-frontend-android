@@ -38,7 +38,7 @@ public class ChoicesActivity extends AppCompatActivity {
     }
 
     private void loadThisPage() {
-        String url = "https://decida-a-historia.herokuapp.com/page/" + ID_OF_CURRENT_PAGE;
+        String url = "https://decida-a-historia.herokuapp.com/page/" + ID_OF_CURRENT_PAGE + "/buttons";
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -47,64 +47,10 @@ public class ChoicesActivity extends AppCompatActivity {
                         try {
                             currentPageJsonObject = response.getJSONArray("response").getJSONObject(0);
                             storyTextView.setText(currentPageJsonObject.getString("story"));
-                            setChoicesButtonsText();
-                        } catch (JSONException e) {
-                            Toast.makeText(ChoicesActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        //  testTextview.setText("Error: " + error.toString());
-                        Toast.makeText(ChoicesActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
-    }
-
-    private void setChoicesButtonsText() throws JSONException {
-        final int button1Id = currentPageJsonObject.getInt("button1");
-        ID_OF_CURRENT_BUTTON_1 = button1Id;
-        String url = "https://decida-a-historia.herokuapp.com/button/" + button1Id;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            choice1Button.setText(response.getJSONArray("response").getJSONObject(0).getString("name"));
-                            setChoiceButton2();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        //  testTextview.setText("Error: " + error.toString());
-                        Toast.makeText(ChoicesActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
-    }
-
-    private void setChoiceButton2() throws JSONException {
-        final int button2Id = currentPageJsonObject.getInt("button2");
-        ID_OF_CURRENT_BUTTON_2 = button2Id;
-        String url = "https://decida-a-historia.herokuapp.com/button/" + button2Id;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            choice2Button.setText(response.getJSONArray("response").getJSONObject(0).getString("name"));
+                            choice1Button.setText(currentPageJsonObject.getString("button_1"));
+                            choice2Button.setText(currentPageJsonObject.getString("button_2"));
+                            ID_OF_CURRENT_BUTTON_1 = currentPageJsonObject.getInt("btn1_id");
+                            ID_OF_CURRENT_BUTTON_2 = currentPageJsonObject.getInt("btn2_id");
                             setOnClickListeners();
                         } catch (JSONException e) {
                             Toast.makeText(ChoicesActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
