@@ -29,6 +29,7 @@ public class StoriesActivity extends AppCompatActivity {
 
     public static String STORY_ID = "com.femeuc.decidaahistoria.STORY_ID";
     public static String IS_STORY_CREATED = "com.femeuc.decidaahistoria.IS_STORY_CREATED";
+    public static String IS_STORY_BEGINNING_PAGE = "com.femeuc.decidaahistoria.IS_STORY_BEGINNING_PAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,12 +228,16 @@ public class StoriesActivity extends AppCompatActivity {
     private void updateLayout() {
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                jsonObjects[i] = jsonArray.getJSONObject(i);
-                textViews[i].setText(jsonObjects[i].getString("title"));
-                storiesIdArray[i] = jsonObjects[i].getInt("id");
+                int index = jsonArray.getJSONObject(i).getInt("genre") -1; // This will help organize the items according to the genre
+                jsonObjects[index] = jsonArray.getJSONObject(i);
+                textViews[index].setText(jsonObjects[index].getString("title"));
+                storiesIdArray[index] = jsonObjects[index].getInt("id");
             } catch (JSONException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+        }
+        for(int i = 0; i < storiesIdArray.length; i++) {
+            if(jsonObjects[i] == null) textViews[i].setText("{ vazio }");
         }
         setOnClickListeners();
     }
