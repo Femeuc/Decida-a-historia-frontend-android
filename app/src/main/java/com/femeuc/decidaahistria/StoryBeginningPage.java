@@ -61,36 +61,125 @@ public class StoryBeginningPage extends AppCompatActivity {
         });
     }
 
-    private void linkButtonToThisPage() {
-        String url = "https://decida-a-historia.herokuapp.com/button/update/" + ID_TO_LINK_THIS_PAGE_TO;
+//    private void createPage() {
+//        String choice1Text = String.valueOf(choice1EditText.getText());
+//
+//        // Create first choice
+//        String url = "https://decida-a-historia.herokuapp.com/button/add";
+//        JSONObject jsonBody = new JSONObject();
+//        try {
+//            jsonBody.put("name", choice1Text);
+//        } catch (JSONException e) {
+//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+//                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+//
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            CHOICE_1_BUTTON_ID = response.getInt("response");
+//                            // Create second choice
+//                            createChoiceButton2();
+//                        } catch (JSONException e) {
+//                            Toast.makeText(StoryBeginningPage.this, "1: ", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                }, new Response.ErrorListener() {
+//
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // TODO: Handle error
+//                        //  testTextview.setText("Error: " + error.toString());
+//                        Toast.makeText(StoryBeginningPage.this, "6: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//                        finish();
+//                    }
+//                });
+//        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
+//    }
+//
+//    private void createChoiceButton2() {
+//        final String choice2Text = String.valueOf(choice2EditText.getText());
+//        // Create second choice
+//        String url = "https://decida-a-historia.herokuapp.com/button/add";
+//        JSONObject jsonBody = new JSONObject();
+//        try {
+//            jsonBody.put("name", choice2Text);
+//        } catch (JSONException e) {
+//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+//                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+//
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            CHOICE_2_BUTTON_ID = response.getInt("response");
+//                            // Create Page
+//                            finallyCreatePage();
+//                        } catch (JSONException e) {
+//                            Toast.makeText(StoryBeginningPage.this, "2: ", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                }, new Response.ErrorListener() {
+//
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // TODO: Handle error
+//                        //  testTextview.setText("Error: " + error.toString());
+//                        Toast.makeText(StoryBeginningPage.this, "5: ", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
+//                });
+//        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
+//    }
+
+    private void createPage() {
+        String storyText = String.valueOf(storyTextEditText.getText());
+        String choice1Text = String.valueOf(choice1EditText.getText());
+        String choice2Text = String.valueOf(choice2EditText.getText());
+
+        String url = "https://decida-a-historia.herokuapp.com/page/buttons/add";
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("name", "linked_page");
-            jsonBody.put("value", PAGE_ID);
+            jsonBody.put("story", storyText);
+            jsonBody.put("button1", choice1Text);
+            jsonBody.put("button2", choice2Text);
         } catch (JSONException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PUT, url, jsonBody, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(StoryBeginningPage.this, ChoicesActivity.class);
-                        intent.putExtra(StoriesActivity.STORY_ID, PAGE_ID);
-                        startActivity(intent);
-                        finish();
+                        try {
+                            // Create Page
+                            PAGE_ID = response.getInt("response");
+                            linkThisPageToId();
+                        } catch (JSONException e) {
+                            Toast.makeText(StoryBeginningPage.this, "3: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
+
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
                         //  testTextview.setText("Error: " + error.toString());
-                        Toast.makeText(StoryBeginningPage.this, "7: ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StoryBeginningPage.this, "4: ", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
         MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
+    }
+
+    private void linkThisPageToId() {
+        if(IS_STORY_BEGINNING_PAGE) addPageAsBeginningPageForStory();
+        else linkButtonToThisPage();
     }
 
     private void addPageAsBeginningPageForStory() {
@@ -127,125 +216,37 @@ public class StoryBeginningPage extends AppCompatActivity {
         MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
     }
 
-    private void createPage() {
-        String choice1Text = String.valueOf(choice1EditText.getText());
-
-        // Create first choice
-        String url = "https://decida-a-historia.herokuapp.com/button/add";
+    private void linkButtonToThisPage() {
+        String url = "https://decida-a-historia.herokuapp.com/button/update/" + ID_TO_LINK_THIS_PAGE_TO;
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("name", choice1Text);
+            jsonBody.put("name", "linked_page");
+            jsonBody.put("value", PAGE_ID);
         } catch (JSONException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+                (Request.Method.PUT, url, jsonBody, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            CHOICE_1_BUTTON_ID = response.getInt("response");
-                            // Create second choice
-                            createChoiceButton2();
-                        } catch (JSONException e) {
-                            Toast.makeText(StoryBeginningPage.this, "1: ", Toast.LENGTH_SHORT).show();
-                        }
+                        Intent intent = new Intent(StoryBeginningPage.this, ChoicesActivity.class);
+                        intent.putExtra(StoriesActivity.STORY_ID, PAGE_ID);
+                        startActivity(intent);
+                        finish();
                     }
-
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
                         //  testTextview.setText("Error: " + error.toString());
-                        Toast.makeText(StoryBeginningPage.this, "6: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(StoryBeginningPage.this, "7: ", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
         MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
     }
-
-    private void createChoiceButton2() {
-        final String choice2Text = String.valueOf(choice2EditText.getText());
-        // Create second choice
-        String url = "https://decida-a-historia.herokuapp.com/button/add";
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("name", choice2Text);
-        } catch (JSONException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            CHOICE_2_BUTTON_ID = response.getInt("response");
-                            // Create Page
-                            finallyCreatePage();
-                        } catch (JSONException e) {
-                            Toast.makeText(StoryBeginningPage.this, "2: ", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        //  testTextview.setText("Error: " + error.toString());
-                        Toast.makeText(StoryBeginningPage.this, "5: ", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
-    }
-
-    private void finallyCreatePage() {
-        String storyText = String.valueOf(storyTextEditText.getText());
-        // Create second choice
-        String url = "https://decida-a-historia.herokuapp.com/page/add";
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("story", storyText);
-            jsonBody.put("button1", CHOICE_1_BUTTON_ID);
-            jsonBody.put("button2", CHOICE_2_BUTTON_ID);
-        } catch (JSONException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Create Page
-                            PAGE_ID = response.getInt("response");
-                            linkThisPageToId();
-                        } catch (JSONException e) {
-                            Toast.makeText(StoryBeginningPage.this, "3: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        //  testTextview.setText("Error: " + error.toString());
-                        Toast.makeText(StoryBeginningPage.this, "4: ", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
-    }
-
-    private void linkThisPageToId() {
-        if(IS_STORY_BEGINNING_PAGE) addPageAsBeginningPageForStory();
-        else linkButtonToThisPage();
-    }
-
 
     private void findViewsById() {
         storyTextEditText = findViewById(R.id.story_text_edit_text);
