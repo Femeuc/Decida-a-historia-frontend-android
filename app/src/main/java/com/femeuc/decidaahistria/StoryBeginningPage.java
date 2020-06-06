@@ -2,11 +2,16 @@ package com.femeuc.decidaahistria;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,7 +29,7 @@ public class StoryBeginningPage extends AppCompatActivity {
     int PAGE_ID;
 
     EditText storyTextEditText, choice1EditText, choice2EditText;
-    Button createStoryButton;
+    Button createStoryButton, endStoryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +47,8 @@ public class StoryBeginningPage extends AppCompatActivity {
         createStoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(storyTextEditText.getText().toString().length() < 400) {
-                    Toast.makeText(StoryBeginningPage.this, "Uma história deve ter no mínimo 400 caracteres", Toast.LENGTH_LONG).show();
+                if(storyTextEditText.getText().toString().length() < 50) {
+                    Toast.makeText(StoryBeginningPage.this, "Uma página deve ter no mínimo 50 caracteres", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if(choice1EditText.getText().toString().length() == 0 || choice2EditText.getText().toString().length() == 0) {
@@ -57,6 +62,79 @@ public class StoryBeginningPage extends AppCompatActivity {
                 createPage();
             }
         });
+
+        endStoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(storyTextEditText.getText().toString().length() < 50) {
+                    Toast.makeText(StoryBeginningPage.this, "Uma página deve ter no mínimo 50 caracteres", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(StoryBeginningPage.this);
+                View view = getLayoutInflater().inflate(R.layout.confirmation_popup_window, null);
+                Button confirmButton = view.findViewById(R.id.confirm_popup_button);
+                Button cancelButton = view.findViewById(R.id.cancel_popup_button);
+                mBuilder.setView(view);
+                final AlertDialog dialog = mBuilder.create();
+                
+                confirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        endStoryHere();
+                        dialog.dismiss();
+                    }
+                });
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                changeConfirmButtonToNewGameButton();
+            }
+        });
+    }
+
+    private void endStoryHere() {
+        String storyText = String.valueOf(storyTextEditText.getText());
+
+        String url = "https://decida-a-historia.herokuapp.com/page/add";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("story", storyText);
+            jsonBody.put("button1", null);
+            jsonBody.put("button2", null);
+        } catch (JSONException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            PAGE_ID = response.getInt("response");
+                            linkThisPageToId();
+                        } catch (JSONException e) {
+                            Toast.makeText(StoryBeginningPage.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        //  testTextview.setText("Error: " + error.toString());
+                        Toast.makeText(StoryBeginningPage.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+        MyJsonRequest.createAndAddRequest(getCacheDir(), jsonObjectRequest, getApplicationContext());
     }
 
     private void createPage() {
@@ -119,6 +197,7 @@ public class StoryBeginningPage extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        StoryDetailsActivity.setBeginningPageId(PAGE_ID);
                         Intent intent = new Intent(StoryBeginningPage.this, ChoicesActivity.class);
                         intent.putExtra(StoriesActivity.STORY_ID, PAGE_ID);
                         startActivity(intent);
@@ -176,5 +255,6 @@ public class StoryBeginningPage extends AppCompatActivity {
         choice1EditText = findViewById(R.id.choice1_edit_text);
         choice2EditText = findViewById(R.id.choice2_edit_text);
         createStoryButton = findViewById(R.id.create_story_button);
+        endStoryButton = findViewById(R.id.end_story_button);
     }
 }

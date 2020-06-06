@@ -23,7 +23,7 @@ public class StoryDetailsActivity extends AppCompatActivity {
     int storyId;
     boolean isCreated;
     JSONObject jsonObject;
-    int beginningPageId = -1;
+    private static int beginningPageId = -1;
 
     TextView storyGenreTextView;
     EditText storyNameEditText, storyDescriptionEditText;
@@ -124,6 +124,8 @@ public class StoryDetailsActivity extends AppCompatActivity {
                         startActivityForResult(intent, 1);
                     }
                 } else {
+                    if(storyNameEditText.getText().toString().length() < 1) { Toast.makeText(StoryDetailsActivity.this, "Título não pode ficar vazio!", Toast.LENGTH_SHORT).show(); return; }
+                    if(storyDescriptionEditText.getText().toString().length() < 1) { Toast.makeText(StoryDetailsActivity.this, "Descrição não pdoe ficar vazia!", Toast.LENGTH_SHORT).show(); return; }
                     createStoryAndSendToServer();
                     disableInteractiveViews();
                 }
@@ -206,4 +208,11 @@ public class StoryDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public static int getBeginningPageId() {
+        return beginningPageId;
+    }
+
+    public static void setBeginningPageId(int beginningPageId) {
+        StoryDetailsActivity.beginningPageId = beginningPageId;
+    }
 }
