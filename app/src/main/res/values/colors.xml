@@ -10,4 +10,5 @@
     <color name="button_background_second">#888888</color>
     <color name="titles">#324a5f</color>
     <color name="white_background">#c5c5c5</color>
+<!--    <color name="end_text_view">#324A5F</color>-->
 </resources>
