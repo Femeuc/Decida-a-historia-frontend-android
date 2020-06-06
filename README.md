@@ -1,7 +1,7 @@
 # Decida-a-historia-frontend-android
 Este é o front-end de um jogo que criei chamado "Decida a História". Este front-end foi desenvolvido como um aplicativo para android e consome uma api de um outro repositório meu chamado "Decida-a-historia-api"
 
-## Imagens do Projeto:
+## Imagens do Projeto: 
 ![Sample 1](https://github.com/Femeuc/Decida-a-historia-frontend-android/blob/master/project-pictures/pic1.png)   
 ![Sample 2](https://github.com/Femeuc/Decida-a-historia-frontend-android/blob/master/project-pictures/pic2.png)   
 ![Sample 3](https://github.com/Femeuc/Decida-a-historia-frontend-android/blob/master/project-pictures/pic3.png)   
